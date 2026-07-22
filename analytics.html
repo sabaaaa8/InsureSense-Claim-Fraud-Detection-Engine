@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Analytics{% endblock %}
+{% block page_title %}Deep Analytics{% endblock %}
+
+{% block content %}
+
+<div class="chart-grid">
+  <div class="chart-panel glass-card">
+    <h3><i class="fa-solid fa-user-group"></i> Age Distribution by Claim Type</h3>
+    <img src="{{ url_for('serve_chart', filename='age_distribution.png') }}?v={{ chart_timestamp }}" alt="Age Distribution">
+  </div>
+
+  <div class="chart-panel glass-card">
+    <h3><i class="fa-solid fa-car-burst"></i> Fraud Rate by Claim Severity</h3>
+    <img src="{{ url_for('serve_chart', filename='claim_severity.png') }}?v={{ chart_timestamp }}" alt="Claim Severity">
+  </div>
+
+  <div class="chart-panel glass-card">
+    <h3><i class="fa-solid fa-car-side"></i> Fraud Rate by Vehicle Type</h3>
+    <img src="{{ url_for('serve_chart', filename='vehicle_type_analysis.png') }}?v={{ chart_timestamp }}" alt="Vehicle Type Analysis">
+  </div>
+
+  <div class="chart-panel glass-card">
+    <h3><i class="fa-solid fa-users-viewfinder"></i> Customer Analytics: Premium vs Claim</h3>
+    <img src="{{ url_for('serve_chart', filename='customer_analytics.png') }}?v={{ chart_timestamp }}" alt="Customer Analytics">
+  </div>
+
+  <div class="chart-panel glass-card">
+    <h3><i class="fa-solid fa-map-location-dot"></i> Fraud Heatmap: State vs Severity</h3>
+    <img src="{{ url_for('serve_chart', filename='fraud_heatmap.png') }}?v={{ chart_timestamp }}" alt="Fraud Heatmap">
+  </div>
+
+  <div class="chart-panel glass-card">
+    <h3><i class="fa-solid fa-star"></i> Top 10 Feature Importances</h3>
+    <img src="{{ url_for('serve_chart', filename='feature_importance.png') }}?v={{ chart_timestamp }}" alt="Feature Importance">
+  </div>
+
+  <div class="chart-panel glass-card">
+    <h3><i class="fa-solid fa-table-cells"></i> Model Confusion Matrix</h3>
+    <img src="{{ url_for('serve_chart', filename='confusion_matrix.png') }}?v={{ chart_timestamp }}" alt="Confusion Matrix">
+  </div>
+</div>
+
+<div class="section-card glass-card" style="margin-top:22px;">
+  <h3><i class="fa-solid fa-ranking-star" style="color:var(--accent-purple-2)"></i>&nbsp; Top 5 States by Fraud Volume</h3>
+  <table class="table-glass">
+    <thead>
+      <tr>
+        <th>State</th>
+        <th>Total Claims</th>
+        <th>Fraud Claims</th>
+        <th>Fraud Rate</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in top_states %}
+      <tr>
+        <td>{{ row.incident_state }}</td>
+        <td>{{ row.total }}</td>
+        <td>{{ row.fraud }}</td>
+        <td><span class="badge-fraud">{{ ((row.fraud / row.total) * 100) | round(1) }}%</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

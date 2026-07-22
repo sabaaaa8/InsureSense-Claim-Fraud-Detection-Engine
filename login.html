@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | InsureSense</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="login-wrapper">
+  <div class="login-orb orb-1"></div>
+  <div class="login-orb orb-2"></div>
+
+  <div class="login-card glass-card">
+    <div class="login-brand-icon"><i class="fa-solid fa-shield-halved"></i></div>
+    <h2>InsureSense</h2>
+    <p class="subtitle">Claim Fraud Detection Engine &mdash; Admin Console</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert-flash alert-flash-{{ category }}">
+            <i class="fa-solid fa-triangle-exclamation"></i> {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('login') }}">
+      <div class="form-floating-glass">
+        <label for="username">Username</label>
+        <input type="text" class="input-glass" id="username" name="username" placeholder="Enter admin username" autocomplete="off" required>
+      </div>
+      <div class="form-floating-glass">
+        <label for="password">Password</label>
+        <input type="password" class="input-glass" id="password" name="password" placeholder="Enter password" required>
+      </div>
+      <button type="submit" class="btn-gradient"><i class="fa-solid fa-right-to-bracket"></i>&nbsp; Sign In</button>
+    </form>
+
+    <div class="login-hint">
+      <i class="fa-solid fa-circle-info"></i>
+      Demo credentials &mdash; Username: <strong>admin</strong> &nbsp;|&nbsp; Password: <strong>admin123</strong>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Fraud Analytics Dashboard{% endblock %}
+
+{% block content %}
+
+<!-- Stat Cards -->
+<div class="stat-grid">
+  <div class="stat-card glass-card">
+    <div class="stat-icon icon-blue"><i class="fa-solid fa-file-lines"></i></div>
+    <div class="stat-value">{{ "{:,}".format(cards.total_claims) }}</div>
+    <div class="stat-label">Total Claims</div>
+  </div>
+
+  <div class="stat-card glass-card">
+    <div class="stat-icon icon-red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+    <div class="stat-value">{{ "{:,}".format(cards.fraud_claims) }}</div>
+    <div class="stat-label">Fraud Claims</div>
+  </div>
+
+  <div class="stat-card glass-card">
+    <div class="stat-icon icon-green"><i class="fa-solid fa-circle-check"></i></div>
+    <div class="stat-value">{{ "{:,}".format(cards.genuine_claims) }}</div>
+    <div class="stat-label">Genuine Claims</div>
+  </div>
+
+  <div class="stat-card glass-card">
+    <div class="stat-icon icon-purple"><i class="fa-solid fa-percent"></i></div>
+    <div class="stat-value">{{ cards.fraud_percentage }}%</div>
+    <div class="stat-label">Fraud Percentage</div>
+  </div>
+
+  <div class="stat-card glass-card">
+    <div class="stat-icon icon-pink"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+    <div class="stat-value">₹{{ "{:,.0f}".format(cards.avg_claim_amount) }}</div>
+    <div class="stat-label">Average Claim Amount</div>
+  </div>
+
+  <div class="stat-card glass-card">
+    <div class="stat-icon icon-yellow"><i class="fa-solid fa-arrow-trend-up"></i></div>
+    <div class="stat-value">₹{{ "{:,.0f}".format(cards.highest_claim_amount) }}</div>
+    <div class="stat-label">Highest Claim Amount</div>
+  </div>
+</div>
+
+<!-- Model performance strip -->
+<div class="section-card glass-card">
+  <h3><i class="fa-solid fa-robot" style="color:var(--accent-blue-2)"></i>&nbsp; Model Performance (Random Forest Classifier)</h3>
+  <div class="metric-pill-row" style="justify-content:flex-start;">
+    <span class="metric-pill">Accuracy: <strong>{{ (metrics.accuracy * 100) | round(2) }}%</strong></span>
+    <span class="metric-pill">Precision: <strong>{{ (metrics.precision * 100) | round(2) }}%</strong></span>
+    <span class="metric-pill">Recall: <strong>{{ (metrics.recall * 100) | round(2) }}%</strong></span>
+    <span class="metric-pill">F1 Score: <strong>{{ (metrics.f1_score * 100) | round(2) }}%</strong></span>
+    <span class="metric-pill">ROC-AUC: <strong>{{ (metrics.roc_auc * 100) | round(2) }}%</strong></span>
+  </div>
+</div>
+
+<!-- Charts -->
+<div class="chart-grid">
+  <div class="chart-panel glass-card">
+    <h3><i class="fa-solid fa-chart-bar"></i> Fraud vs Genuine Claims</h3>
+    <img src="{{ url_for('serve_chart', filename='fraud_vs_genuine.png') }}?v={{ chart_timestamp }}" alt="Fraud vs Genuine">
+  </div>
+
+  <div class="chart-panel glass-card">
+    <h3><i class="fa-solid fa-chart-pie"></i> Fraud Percentage</h3>
+    <img src="{{ url_for('serve_chart', filename='fraud_percentage.png') }}?v={{ chart_timestamp }}" alt="Fraud Percentage">
+  </div>
+
+  <div class="chart-panel glass-card">
+    <h3><i class="fa-solid fa-arrow-trend-up"></i> Fraud Trend by Policy Tenure</h3>
+    <img src="{{ url_for('serve_chart', filename='fraud_trend.png') }}?v={{ chart_timestamp }}" alt="Fraud Trend">
+  </div>
+
+  <div class="chart-panel glass-card">
+    <h3><i class="fa-solid fa-coins"></i> Claim Amount Distribution</h3>
+    <img src="{{ url_for('serve_chart', filename='claim_amount_distribution.png') }}?v={{ chart_timestamp }}" alt="Claim Amount Distribution">
+  </div>
+</div>
+
+{% endblock %}

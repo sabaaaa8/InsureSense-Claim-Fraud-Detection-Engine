@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Reports{% endblock %}
+{% block page_title %}Reports{% endblock %}
+
+{% block content %}
+
+<div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom:24px;">
+  <div class="stat-card glass-card">
+    <div class="stat-icon icon-blue"><i class="fa-solid fa-file-lines"></i></div>
+    <div class="stat-value">{{ "{:,}".format(total_claims) }}</div>
+    <div class="stat-label">Total Claims</div>
+  </div>
+  <div class="stat-card glass-card">
+    <div class="stat-icon icon-red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+    <div class="stat-value">{{ "{:,}".format(fraud_claims) }}</div>
+    <div class="stat-label">Fraud Claims</div>
+  </div>
+  <div class="stat-card glass-card">
+    <div class="stat-icon icon-green"><i class="fa-solid fa-circle-check"></i></div>
+    <div class="stat-value">{{ "{:,}".format(genuine_claims) }}</div>
+    <div class="stat-label">Genuine Claims</div>
+  </div>
+  <div class="stat-card glass-card">
+    <div class="stat-icon icon-purple"><i class="fa-solid fa-percent"></i></div>
+    <div class="stat-value">{{ fraud_percentage }}%</div>
+    <div class="stat-label">Fraud Percentage</div>
+  </div>
+</div>
+
+<!-- Download actions -->
+<div class="report-actions">
+  <a href="{{ url_for('download_full_report') }}" class="btn-report glass-card">
+    <i class="fa-solid fa-file-csv"></i> Download Full Claims Report (CSV)
+  </a>
+  <a href="{{ url_for('download_fraud_report') }}" class="btn-report glass-card">
+    <i class="fa-solid fa-file-shield"></i> Download Fraud-Only Report (CSV)
+  </a>
+  <a href="{{ url_for('serve_chart', filename='fraud_heatmap.png') }}" target="_blank" class="btn-report glass-card">
+    <i class="fa-solid fa-image"></i> View Fraud Heatmap
+  </a>
+</div>
+
+<!-- Monthly summary -->
+<div class="section-card glass-card">
+  <h3><i class="fa-solid fa-calendar-days" style="color:var(--accent-blue-2)"></i>&nbsp; Monthly Summary (by Policy Tenure Bucket)</h3>
+  <table class="table-glass">
+    <thead>
+      <tr><th>Period</th><th>Total Claims</th><th>Fraud Claims</th><th>Fraud Rate</th></tr>
+    </thead>
+    <tbody>
+      {% for row in monthly_summary %}
+      <tr>
+        <td>{{ row.month_bucket }}</td>
+        <td>{{ row.total_claims }}</td>
+        <td>{{ row.fraud_claims }}</td>
+        <td>
+          {% if row.total_claims > 0 %}
+            <span class="badge-fraud">{{ ((row.fraud_claims / row.total_claims) * 100) | round(1) }}%</span>
+          {% else %}
+            <span class="badge-genuine">0%</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- State summary -->
+<div class="section-card glass-card">
+  <h3><i class="fa-solid fa-map" style="color:var(--accent-purple-2)"></i>&nbsp; State-wise Fraud Report</h3>
+  <table class="table-glass">
+    <thead>
+      <tr><th>State</th><th>Total Claims</th><th>Fraud Claims</th><th>Fraud Rate</th></tr>
+    </thead>
+    <tbody>
+      {% for row in state_summary %}
+      <tr>
+        <td>{{ row.incident_state }}</td>
+        <td>{{ row.total_claims }}</td>
+        <td>{{ row.fraud_claims }}</td>
+        <td><span class="badge-fraud">{{ ((row.fraud_claims / row.total_claims) * 100) | round(1) }}%</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
